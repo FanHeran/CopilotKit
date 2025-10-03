@@ -2,9 +2,14 @@
 A simple agentic chat flow.
 """
 
+import os
 from crewai.flow.flow import Flow, start
 from litellm import completion
 from copilotkit.crewai import copilotkit_stream, CopilotKitState
+
+# Configure OpenRouter for litellm
+os.environ["OPENROUTER_API_KEY"] = os.getenv("OPENROUTER_API_KEY", "")
+os.environ["OPENROUTER_API_BASE"] = "https://openrouter.ai/api/v1"
 
 class AgenticChatFlow(Flow[CopilotKitState]):
 
@@ -18,8 +23,10 @@ class AgenticChatFlow(Flow[CopilotKitState]):
         response = await copilotkit_stream(
             completion(
 
-                # 1.1 Specify the model to use
-                model="openai/gpt-4o",
+                # 1.1 Specify the model to use (OpenRouter format)
+                model="openrouter/openai/gpt-4o",
+                api_key=os.getenv("OPENROUTER_API_KEY"),
+                base_url="https://openrouter.ai/api/v1",
                 messages=[
                     {
                         "role": "system", 

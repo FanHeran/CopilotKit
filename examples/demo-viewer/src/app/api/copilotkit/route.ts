@@ -2,47 +2,77 @@ import {
   CopilotRuntime,
   OpenAIAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
-  LangGraphAgent
+  LangGraphAgent,
 } from "@copilotkit/runtime";
+import OpenAI from "openai";
 
 import { NextRequest } from "next/server";
 
-const serviceAdapter = new OpenAIAdapter();
+// Configure OpenRouter client
+const openai = new OpenAI({
+  apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: "https://openrouter.ai/api/v1",
+  defaultHeaders: {
+    "HTTP-Referer": process.env.YOUR_SITE_URL || "http://localhost:3000",
+    "X-Title": process.env.YOUR_SITE_NAME || "CopilotKit Demo Viewer",
+  },
+});
 
+const serviceAdapter = new OpenAIAdapter({ openai });
 
 export const POST = async (req: NextRequest) => {
-  let runtime
+  let runtime;
   if (req.url.endsWith("?standard=true")) {
     runtime = new CopilotRuntime();
-  }
-  else if (req.url.endsWith("?langgraph=true")) {
-    let deploymentUrl = process.env.LG_DEPLOYMENT_URL ?? "http://localhost:8000"
+  } else if (req.url.endsWith("?langgraph=true")) {
+    let deploymentUrl =
+      process.env.LG_DEPLOYMENT_URL ?? "http://localhost:8000";
     runtime = new CopilotRuntime({
       agents: {
-        "agentic_chat": new LangGraphAgent({ deploymentUrl, graphId: 'agentic_chat' }),
-        "agentic_generative_ui": new LangGraphAgent({ deploymentUrl, graphId: 'agentic_generative_ui' }),
-        "human_in_the_loop": new LangGraphAgent({ deploymentUrl, graphId: 'human_in_the_loop' }),
-        "predictive_state_updates": new LangGraphAgent({ deploymentUrl, graphId: 'predictive_state_updates' }),
-        "shared_state": new LangGraphAgent({ deploymentUrl, graphId: 'shared_state' }),
-        "tool_based_generative_ui": new LangGraphAgent({ deploymentUrl, graphId: 'tool_based_generative_ui' }),
-        "no_chat": new LangGraphAgent({ deploymentUrl, graphId: 'no_chat' })
-      }
+        agentic_chat: new LangGraphAgent({
+          deploymentUrl,
+          graphId: "agentic_chat",
+        }),
+        agentic_generative_ui: new LangGraphAgent({
+          deploymentUrl,
+          graphId: "agentic_generative_ui",
+        }),
+        human_in_the_loop: new LangGraphAgent({
+          deploymentUrl,
+          graphId: "human_in_the_loop",
+        }),
+        predictive_state_updates: new LangGraphAgent({
+          deploymentUrl,
+          graphId: "predictive_state_updates",
+        }),
+        shared_state: new LangGraphAgent({
+          deploymentUrl,
+          graphId: "shared_state",
+        }),
+        tool_based_generative_ui: new LangGraphAgent({
+          deploymentUrl,
+          graphId: "tool_based_generative_ui",
+        }),
+        no_chat: new LangGraphAgent({ deploymentUrl, graphId: "no_chat" }),
+      },
     });
-  }
-  else if (req.url.endsWith("?crewai=true")) {
+  } else if (req.url.endsWith("?crewai=true")) {
     runtime = new CopilotRuntime({
       remoteEndpoints: [
         {
-          url: process.env.REMOTE_ACTION_URL || process.env.REMOTE_ACTION_URL_CREWAI || "http://localhost:8000/copilotkit",
+          url:
+            process.env.REMOTE_ACTION_URL ||
+            process.env.REMOTE_ACTION_URL_CREWAI ||
+            "http://localhost:8000/copilotkit",
         },
       ],
     });
-  }
-  else{
+  } else {
     runtime = new CopilotRuntime({
       remoteEndpoints: [
         {
-          url: process.env.REMOTE_ACTION_URL || "http://localhost:8000/copilotkit",
+          url:
+            process.env.REMOTE_ACTION_URL || "http://localhost:8000/copilotkit",
         },
       ],
     });

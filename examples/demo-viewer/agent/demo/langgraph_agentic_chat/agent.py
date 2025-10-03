@@ -2,6 +2,7 @@
 A simple agentic chat flow using LangGraph instead of CrewAI.
 """
 
+import os
 from typing import Dict, List, Any, Optional
 
 # Updated imports for LangGraph
@@ -40,8 +41,16 @@ async def chat_node(state: AgentState, config: RunnableConfig):
     https://www.perplexity.ai/search/react-agents-NcXLQhreS0WDzpVaS4m9Cg
     """
     
-    # 1. Define the model
-    model = ChatOpenAI(model="gpt-4o")
+    # 1. Define the model (using OpenRouter)
+    model = ChatOpenAI(
+        model="gpt-4o",
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+        base_url="https://openrouter.ai/api/v1",
+        default_headers={
+            "HTTP-Referer": os.getenv("YOUR_SITE_URL", "http://localhost:3000"),
+            "X-Title": os.getenv("YOUR_SITE_NAME", "CopilotKit Demo Viewer"),
+        }
+    )
     
     # Define config for the model
     if config is None:

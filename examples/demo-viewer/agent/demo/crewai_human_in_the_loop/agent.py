@@ -2,14 +2,19 @@
 An example demonstrating agentic generative UI.
 """
 
+import os
 from crewai.flow.flow import Flow, start, router, listen
 from copilotkit.crewai import (
-  copilotkit_stream, 
-  CopilotKitState, 
+  copilotkit_stream,
+  CopilotKitState,
 )
 from litellm import completion
 from pydantic import BaseModel
 from typing import Literal, List
+
+# Configure OpenRouter for litellm
+os.environ["OPENROUTER_API_KEY"] = os.getenv("OPENROUTER_API_KEY", "")
+os.environ["OPENROUTER_API_BASE"] = "https://openrouter.ai/api/v1"
 
 # This tool simulates performing a task on the server.
 # The tool call will be streamed to the frontend as it is being generated.
@@ -95,8 +100,10 @@ class HumanInTheLoopFlow(Flow[AgentState]):
         response = await copilotkit_stream(
             completion(
 
-                # 1.1 Specify the model to use
-                model="openai/gpt-4o",
+                # 1.1 Specify the model to use (OpenRouter format)
+                model="openrouter/openai/gpt-4o",
+                api_key=os.getenv("OPENROUTER_API_KEY"),
+                base_url="https://openrouter.ai/api/v1",
                 messages=[
                     {
                         "role": "system", 

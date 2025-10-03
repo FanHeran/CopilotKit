@@ -2,6 +2,7 @@
 An example demonstrating agentic generative UI.
 """
 
+import os
 import json
 import asyncio
 from crewai.flow.flow import Flow, start, router, listen, or_
@@ -13,6 +14,10 @@ from copilotkit.crewai import (
 )
 from litellm import completion
 from pydantic import BaseModel
+
+# Configure OpenRouter for litellm
+os.environ["OPENROUTER_API_KEY"] = os.getenv("OPENROUTER_API_KEY", "")
+os.environ["OPENROUTER_API_BASE"] = "https://openrouter.ai/api/v1"
 from typing import Literal, List
 
 # This tool simulates performing a task on the server.
@@ -107,8 +112,10 @@ class AgenticGenerativeUIFlow(Flow[AgentState]):
         response = await copilotkit_stream(
             completion(
 
-                # 2.1 Specify the model to use
-                model="openai/gpt-4o",
+                # 2.1 Specify the model to use (OpenRouter format)
+                model="openrouter/openai/gpt-4o",
+                api_key=os.getenv("OPENROUTER_API_KEY"),
+                base_url="https://openrouter.ai/api/v1",
                 messages=[
                     {
                         "role": "system", 

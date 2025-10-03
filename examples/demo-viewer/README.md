@@ -22,15 +22,19 @@ You'll need to set up environment variables for both the root directory and the 
 
 ```bash
 # In the root directory
-echo "OPENAI_API_KEY=your_api_key_here" > .env
+echo "OPENROUTER_API_KEY=your_openrouter_api_key_here" > .env
+echo "YOUR_SITE_URL=http://localhost:3000" >> .env
+echo "YOUR_SITE_NAME=CopilotKit Demo Viewer" >> .env
 
 # In the agent directory
 cd agent
-echo "OPENAI_API_KEY=your_api_key_here" > .env
+echo "OPENROUTER_API_KEY=your_openrouter_api_key_here" > .env
+echo "YOUR_SITE_URL=http://localhost:3000" >> .env
+echo "YOUR_SITE_NAME=CopilotKit Demo Viewer" >> .env
 cd ..
 ```
 
-Make sure to replace `your_api_key_here` with your actual OpenAI API key.
+Make sure to replace `your_openrouter_api_key_here` with your actual OpenRouter API key. You can get one from [OpenRouter](https://openrouter.ai/).
 
 ### Choosing Demo Set (CrewAI vs LangGraph)
 
@@ -77,7 +81,7 @@ If you have set `NEXT_PUBLIC_AGENT_TYPE=langgraph` in the root `.env` file, foll
     python3.12 -m venv .venv
     source .venv/bin/activate
     ```
-    *(Ensure you have Python 3.12 installed)*
+    _(Ensure you have Python 3.12 installed)_
 3.  Install base dependencies using Poetry:
     ```bash
     poetry install
@@ -130,11 +134,13 @@ agents/demo/your-demo-name/
 Inside this folder, add the following files:
 
 #### Python Files (Backend)
+
 - `__init__.py` - An empty file required for Python package imports
 - `agent.py` - The main Python file for your agent implementation
 - Any additional Python modules your agent needs to import
 
 #### Frontend Files
+
 - `page.tsx` - The main React component for your demo
 - Any additional styles or components needed
 
@@ -167,6 +173,7 @@ Open `src/demos/config.ts` and add your demo to the configuration array:
 ```
 
 Important notes:
+
 - The `id` must correspond to the folder name inside `agents/demo`
 - Ensure the `path` correctly points to your demo folder
 - Add relevant tags to help users find your demo
@@ -191,4 +198,4 @@ Run the Demo Viewer as described in the Development Setup section and verify tha
 - React
 - TypeScript
 - Tailwind CSS
-- CopilotKit 
+- CopilotKit

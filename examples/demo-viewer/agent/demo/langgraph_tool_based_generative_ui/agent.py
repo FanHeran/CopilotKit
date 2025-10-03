@@ -2,6 +2,7 @@
 An example demonstrating tool-based generative UI using LangGraph.
 """
 
+import os
 from typing import Dict, List, Any, Optional
 
 # LangGraph imports
@@ -87,8 +88,16 @@ Available images:
 Dont provide the relavent image names in your final response to the user.
 """
 
-    # Define the model
-    model = ChatOpenAI(model="gpt-4o")
+    # Define the model (using OpenRouter)
+    model = ChatOpenAI(
+        model="gpt-4o",
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+        base_url="https://openrouter.ai/api/v1",
+        default_headers={
+            "HTTP-Referer": os.getenv("YOUR_SITE_URL", "http://localhost:3000"),
+            "X-Title": os.getenv("YOUR_SITE_NAME", "CopilotKit Demo Viewer"),
+        }
+    )
     
     # Define config for the model
     if config is None:

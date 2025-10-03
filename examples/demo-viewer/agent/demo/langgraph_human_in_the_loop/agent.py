@@ -2,6 +2,7 @@
 A LangGraph implementation of the human-in-the-loop agent.
 """
 
+import os
 import json
 from typing import Dict, List, Any
 
@@ -90,8 +91,16 @@ async def chat_node(state: Dict[str, Any], config: RunnableConfig):
     Always make sure you will provide tasks based on the user query
     """
 
-    # Define the model
-    model = ChatOpenAI(model="gpt-4o-mini")
+    # Define the model (using OpenRouter)
+    model = ChatOpenAI(
+        model="gpt-4o-mini",
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+        base_url="https://openrouter.ai/api/v1",
+        default_headers={
+            "HTTP-Referer": os.getenv("YOUR_SITE_URL", "http://localhost:3000"),
+            "X-Title": os.getenv("YOUR_SITE_NAME", "CopilotKit Demo Viewer"),
+        }
+    )
     
     # Define config for the model
     if config is None:
@@ -228,7 +237,15 @@ async def process_steps_node(state: Dict[str, Any], config: RunnableConfig):
     Don't just repeat a list of steps, come up with a creative but short description (3 sentences max) of how you are performing the task.
     """
     
-    final_response = await ChatOpenAI(model="gpt-4o").ainvoke([
+    final_response = await ChatOpenAI(
+        model="gpt-4o",
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+        base_url="https://openrouter.ai/api/v1",
+        default_headers={
+            "HTTP-Referer": os.getenv("YOUR_SITE_URL", "http://localhost:3000"),
+            "X-Title": os.getenv("YOUR_SITE_NAME", "CopilotKit Demo Viewer"),
+        }
+    ).ainvoke([
         SystemMessage(content=final_prompt),
         {"role": "user", "content": user_response}
     ], config)
