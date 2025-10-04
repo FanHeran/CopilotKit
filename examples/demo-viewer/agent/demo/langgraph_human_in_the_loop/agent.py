@@ -93,9 +93,9 @@ async def chat_node(state: Dict[str, Any], config: RunnableConfig):
 
     # Define the model (using OpenRouter)
     model = ChatOpenAI(
-        model="gpt-4o-mini",
+        model=os.getenv("OPENROUTER_MODEL", "gpt-4o"),
         api_key=os.getenv("OPENROUTER_API_KEY"),
-        base_url="https://openrouter.ai/api/v1",
+        base_url=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
         default_headers={
             "HTTP-Referer": os.getenv("YOUR_SITE_URL", "http://localhost:3000"),
             "X-Title": os.getenv("YOUR_SITE_NAME", "CopilotKit Demo Viewer"),
@@ -238,9 +238,9 @@ async def process_steps_node(state: Dict[str, Any], config: RunnableConfig):
     """
     
     final_response = await ChatOpenAI(
-        model="gpt-4o",
+        model=os.getenv("OPENROUTER_MODEL", "gpt-4o"),
         api_key=os.getenv("OPENROUTER_API_KEY"),
-        base_url="https://openrouter.ai/api/v1",
+        base_url=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
         default_headers={
             "HTTP-Referer": os.getenv("YOUR_SITE_URL", "http://localhost:3000"),
             "X-Title": os.getenv("YOUR_SITE_NAME", "CopilotKit Demo Viewer"),

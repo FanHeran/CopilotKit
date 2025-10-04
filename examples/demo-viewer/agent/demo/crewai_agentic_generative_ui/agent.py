@@ -15,9 +15,6 @@ from copilotkit.crewai import (
 from litellm import completion
 from pydantic import BaseModel
 
-# Configure OpenRouter for litellm
-os.environ["OPENROUTER_API_KEY"] = os.getenv("OPENROUTER_API_KEY", "")
-os.environ["OPENROUTER_API_BASE"] = "https://openrouter.ai/api/v1"
 from typing import Literal, List
 
 # This tool simulates performing a task on the server.
@@ -113,9 +110,9 @@ class AgenticGenerativeUIFlow(Flow[AgentState]):
             completion(
 
                 # 2.1 Specify the model to use (OpenRouter format)
-                model="openrouter/openai/gpt-4o",
+                model=os.getenv("OPENROUTER_MODEL", "openrouter/openai/gpt-4o"),
                 api_key=os.getenv("OPENROUTER_API_KEY"),
-                base_url="https://openrouter.ai/api/v1",
+                base_url=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
                 messages=[
                     {
                         "role": "system", 

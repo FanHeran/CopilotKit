@@ -2,6 +2,7 @@
 A demo of shared state between the agent and CopilotKit.
 """
 
+import os
 import json
 from enum import Enum
 from typing import List, Optional
@@ -126,6 +127,7 @@ class SharedStateFlow(Flow[AgentState]):
     This is a sample flow that demonstrates shared state between the agent and CopilotKit.
     """
 
+import os
     @start()
     @listen("route_follow_up")
     async def start_flow(self):
@@ -133,6 +135,7 @@ class SharedStateFlow(Flow[AgentState]):
         This is the entry point for the flow.
         """
 
+import os
     @router(start_flow)
     async def chat(self):
         """
@@ -145,6 +148,7 @@ class SharedStateFlow(Flow[AgentState]):
         If you have just created or modified the recipe, just answer in one sentence what you did.
         """
 
+import os
         # 1. Here we specify that we want to stream the tool call to generate_recipe
         #    to the frontend as state.
         await copilotkit_predict_state({
@@ -161,7 +165,9 @@ class SharedStateFlow(Flow[AgentState]):
             completion(
 
                 # 2.1 Specify the model to use
-                model="openai/gpt-4o",
+                model=os.getenv("OPENROUTER_MODEL", "openrouter/openai/gpt-4o"),
+                api_key=os.getenv("OPENROUTER_API_KEY"),
+                base_url=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
                 messages=[
                     {
                         "role": "system", 

@@ -2,6 +2,7 @@
 A LangGraph implementation of the human-in-the-loop agent.
 """
 
+import os
 import json
 from typing import Dict, List, Any
 import asyncio
@@ -26,6 +27,7 @@ class AgentState(CopilotKitState):
     It inherits from CopilotKitState which provides the basic fields needed by CopilotKit.
     """
 
+import os
 async def start_flow(state: AgentState, config: RunnableConfig):
     """
     This is the entry point for the flow.
@@ -51,7 +53,15 @@ async def buffer_node(state: AgentState, config: RunnableConfig):
 
     
     # Define the model
-    model = ChatOpenAI(model="gpt-4o-mini")
+    model = ChatOpenAI(
+        model=os.getenv("OPENROUTER_MODEL", "gpt-4o"),
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+        base_url=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
+        default_headers={
+            "HTTP-Referer": os.getenv("YOUR_SITE_URL", "http://localhost:3000"),
+            "X-Title": os.getenv("YOUR_SITE_NAME", "CopilotKit Demo Viewer"),
+        }
+    )
     
     # Define config for the model
     if config is None:
@@ -106,6 +116,7 @@ async def reporting_node(state: AgentState, config: RunnableConfig):
     """
     This node handles the user interrupt for step customization and generates the final response.
     """
+
 
     await asyncio.sleep(2)
     await copilotkit_exit(config)

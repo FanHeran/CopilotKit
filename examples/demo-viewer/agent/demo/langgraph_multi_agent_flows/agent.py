@@ -94,7 +94,9 @@ class MultiAgentWriterFlow(Flow[AgentState]):
 
         response = await copilotkit_stream(
             completion(
-                model="openai/gpt-4o",
+                model=os.getenv("OPENROUTER_MODEL", "openrouter/openai/gpt-4o"),
+                api_key=os.getenv("OPENROUTER_API_KEY"),
+                base_url=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
                 messages=[
                     {
                         "role": "system", 
@@ -190,7 +192,9 @@ class MultiAgentCriticFlow(Flow[AgentState]):
 
         response = await copilotkit_stream(
             completion(
-                model="openai/gpt-4o",
+                model=os.getenv("OPENROUTER_MODEL", "openrouter/openai/gpt-4o"),
+                api_key=os.getenv("OPENROUTER_API_KEY"),
+                base_url=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
                 messages=[
                     {
                         "role": "system", 
@@ -285,7 +289,9 @@ class MultiAgentResearcherFlow(Flow[AgentState]):
 
         response = await copilotkit_stream(
             completion(
-                model="openai/gpt-4o",
+                model=os.getenv("OPENROUTER_MODEL", "openrouter/openai/gpt-4o"),
+                api_key=os.getenv("OPENROUTER_API_KEY"),
+                base_url=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
                 messages=[
                     {
                         "role": "system", 

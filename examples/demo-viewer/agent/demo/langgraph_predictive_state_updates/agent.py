@@ -2,6 +2,7 @@
 A demo of predictive state updates using LangGraph.
 """
 
+import os
 import json
 import uuid
 from typing import Dict, List, Any, Optional
@@ -69,6 +70,7 @@ async def chat_node(state: AgentState, config: RunnableConfig):
     Standard chat node.
     """
 
+
     system_prompt = f"""
     You are a helpful assistant for writing documents. 
     To write the document, you MUST use the write_document tool.
@@ -78,8 +80,17 @@ async def chat_node(state: AgentState, config: RunnableConfig):
     This is the current state of the document: ----\n {state.get('document')}\n-----
     """
 
+    import os
     # Define the model
-    model = ChatOpenAI(model="gpt-4o")
+    model = ChatOpenAI(
+        model=os.getenv("OPENROUTER_MODEL", "gpt-4o"),
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+        base_url=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
+        default_headers={
+            "HTTP-Referer": os.getenv("YOUR_SITE_URL", "http://localhost:3000"),
+            "X-Title": os.getenv("YOUR_SITE_NAME", "CopilotKit Demo Viewer"),
+        }
+    )
     
     # Define config for the model with emit_intermediate_state to stream tool calls to frontend
     if config is None:

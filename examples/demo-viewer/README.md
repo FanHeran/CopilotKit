@@ -23,18 +23,28 @@ You'll need to set up environment variables for both the root directory and the 
 ```bash
 # In the root directory
 echo "OPENROUTER_API_KEY=your_openrouter_api_key_here" > .env
+echo "OPENROUTER_BASE_URL=https://openrouter.ai/api/v1" >> .env
+echo "OPENROUTER_MODEL=openrouter/openai/gpt-4o" >> .env
 echo "YOUR_SITE_URL=http://localhost:3000" >> .env
 echo "YOUR_SITE_NAME=CopilotKit Demo Viewer" >> .env
 
 # In the agent directory
 cd agent
 echo "OPENROUTER_API_KEY=your_openrouter_api_key_here" > .env
+echo "OPENROUTER_BASE_URL=https://openrouter.ai/api/v1" >> .env
+echo "OPENROUTER_MODEL=openrouter/openai/gpt-4o" >> .env
 echo "YOUR_SITE_URL=http://localhost:3000" >> .env
 echo "YOUR_SITE_NAME=CopilotKit Demo Viewer" >> .env
 cd ..
 ```
 
-Make sure to replace `your_openrouter_api_key_here` with your actual OpenRouter API key. You can get one from [OpenRouter](https://openrouter.ai/).
+**Environment Variables Explained:**
+
+- `OPENROUTER_API_KEY`: Your OpenRouter API key (get one from [OpenRouter](https://openrouter.ai/))
+- `OPENROUTER_BASE_URL`: OpenRouter API base URL (default: https://openrouter.ai/api/v1)
+- `OPENROUTER_MODEL`: The model to use (default: openrouter/openai/gpt-4o, you can change to other models like openrouter/anthropic/claude-3.5-sonnet)
+- `YOUR_SITE_URL`: Your site URL for OpenRouter headers (default: http://localhost:3000)
+- `YOUR_SITE_NAME`: Your site name for OpenRouter headers (default: CopilotKit Demo Viewer)
 
 ### Choosing Demo Set (CrewAI vs LangGraph)
 

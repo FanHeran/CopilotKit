@@ -7,9 +7,11 @@ import {
 import OpenAI from "openai";
 
 import { NextRequest } from "next/server";
+import { m } from "framer-motion";
 
 // Configure OpenRouter client
 const openai = new OpenAI({
+  model: process.env.OPENROUTER_MODEL,
   apiKey: process.env.OPENROUTER_API_KEY,
   baseURL: "https://openrouter.ai/api/v1",
   defaultHeaders: {

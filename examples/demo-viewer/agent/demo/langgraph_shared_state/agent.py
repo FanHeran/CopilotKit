@@ -2,6 +2,7 @@
 A demo of shared state between the agent and CopilotKit using LangGraph.
 """
 
+import os
 import json
 from enum import Enum
 from typing import Dict, List, Any, Optional
@@ -126,6 +127,7 @@ async def start_flow(state: Dict[str, Any], config: RunnableConfig):
     This is the entry point for the flow.
     """
 
+    import os
     # Initialize recipe if not exists
     if "recipe" not in state or state["recipe"] is None:
         state["recipe"] = {
@@ -173,8 +175,17 @@ async def chat_node(state: Dict[str, Any], config: RunnableConfig):
     If you have just created or modified the recipe, just answer in one sentence what you did. dont describe the recipe, just say what you did.
     """
 
+    import os
     # Define the model
-    model = ChatOpenAI(model="gpt-4o-mini")
+    model = ChatOpenAI(
+        model=os.getenv("OPENROUTER_MODEL", "gpt-4o"),
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+        base_url=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
+        default_headers={
+            "HTTP-Referer": os.getenv("YOUR_SITE_URL", "http://localhost:3000"),
+            "X-Title": os.getenv("YOUR_SITE_NAME", "CopilotKit Demo Viewer"),
+        }
+    )
     
     # Define config for the model
     if config is None:
